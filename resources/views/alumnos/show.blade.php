@@ -1,53 +1,56 @@
 <x-layouts.layout>
-    <div class="flex flex-row justify-center items-center min-h-full bg-gray-300">
-        <div class="bg-white p-3 rounded-2xl">
+    <div class="container mx-auto py-6">
+        <h1 class="text-3xl font-bold text-center mb-6">Detalles del Alumno</h1>
 
-            <div class="grid grid-cols-2 gap-4">
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <x-input-label for="nombre" value="Nombre"/>
-                        <span class="block mt-1 w-full">{{$alumno->nombre}}</span>
-                    </div>
-                    <div>
-                        <x-input-label for="email" value="Email"/>
-                        <span class="block mt-1 w-full">{{$alumno->email}}
-                    </div>
-                    <div>
-                        <x-input-label for="edad" value="Edad"/>
-                        <span class="block mt-1 w-full">{{$alumno->edad}}
-                    </div>
-
-                </div> {{--end div datos alumno--}}
-                <div>
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th>{{__("Idioma")}}</th>
-                            <th>{{__("Nivel")}}</th>
-                            <th>{{__("Título")}}</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @foreach($alumno->idiomas as $idioma)
-                            <tr class="hover:bg-gray-200">
-                                <td>{{$idioma->idioma}}</td>
-                                <td>{{$idioma->nivel}}</td>
-                                <td>{{$idioma->titulo}}</td>
-                            </tr>
-
-                        @endforeach
-                        </tbody>
-
-                    </table>
-
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="p-4 border rounded-md bg-gray-50">
+                    <p class="text-lg font-medium">Nombre del Alumno:</p>
+                    <p class="text-gray-700">{{ $alumno->nombre }}</p>
                 </div>
-            </div>
-            <div class="flex flex-row justify-between p-3">
-                <button class="btn btn-warning" type="submit">Guardar</button>
-                <button class="btn btn-warning" type="submit">Cancelar</button>
+
+                <div class="p-4 border rounded-md bg-gray-50">
+                    <p class="text-lg font-medium">Correo Electrónico:</p>
+                    <p class="text-gray-700">{{ $alumno->email }}</p>
+                </div>
+
+                <div class="p-4 border rounded-md bg-gray-50">
+                    <p class="text-lg font-medium">Edad:</p>
+                    <p class="text-gray-700">{{ $alumno->edad }}</p>
+                </div>
+
+                <div class="p-4 border rounded-md bg-gray-50">
+                    <p class="text-lg font-medium">Idiomas:</p>
+                    @if($alumno->idiomas->isNotEmpty())
+                        <ul class="list-disc list-inside text-gray-700">
+                            @foreach($alumno->idiomas as $idioma)
+                                <li>{{ $idioma->idioma }} (Nivel: {{ $idioma->nivel }})</li>
+                            @endforeach
+                        </ul>
+                    @else
+                        <p class="text-gray-700">No tiene idiomas registrados.</p>
+                    @endif
+                </div>
+
+                <div class="p-4 border rounded-md bg-gray-50">
+                    <p class="text-lg font-medium">Canción Favorita:</p>
+                    @if($alumno->cancion_favorita)
+                        <p class="text-gray-700">{{ $alumno->cancion_favorita }}</p>
+                        @if(isset($cancionInfo['caratula']))
+                            <img src="{{ $cancionInfo['caratula'] }}" alt="Carátula del álbum"
+                                class="rounded-lg shadow-md mt-2">
+                        @endif
+                    @else
+                        <p class="text-gray-700">No tiene canción favorita registrada.</p>
+                    @endif
+                </div>
 
             </div>
 
+            <div class="flex justify-between mt-6">
+                <a href="{{ route('alumnos.index') }}" class="btn btn-outline btn-error">Volver</a>
+                <a href="{{ route('alumnos.edit', $alumno->id) }}" class="btn btn-primary">Editar Alumno</a>
+            </div>
         </div>
     </div>
 </x-layouts.layout>

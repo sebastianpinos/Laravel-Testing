@@ -1,93 +1,74 @@
 <x-layouts.layout>
-    @if (session("mensaje"))
-        <div role="alert" class="alert alert-success">
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-6 w-6 shrink-0 stroke-current"
-                fill="none"
-                viewBox="0 0 24 24">
-                <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <span>{{session("mensaje")}}</span>
+    <div class="container mx-auto py-6">
+        <h1 class="text-3xl font-bold text-center mb-6">Lista de Alumnos</h1>
+
+        @if(session('mensaje'))
+            <div class="alert alert-success bg-green-500 text-white p-3 rounded-md shadow-md mb-4">
+                {{ session('mensaje') }}
+            </div>
+        @endif
+
+        <div class="flex justify-end mb-4">
+            <a href="{{ route('alumnos.create') }}"
+                class="btn btn-primary bg-blue-500 text-white py-2 px-4 rounded-md shadow-md hover:bg-blue-600">
+                ➕ Nuevo Alumno
+            </a>
         </div>
-    @endif
 
-
-    <div class="p-2 flex flex-row justify-start items-center space-x-2">
-        <a href="{{route("alumnos.create")}}" class="btn btn-sm btn-primary">Crear Alumno</a>
-        <a href="{{route("home")}}" class="btn btn-sm btn-primary">Volver</a>
-    </div>
-    <div class="max-h-full overflow-x-auto">
-        <table class="table table-xs table-pin-rows table-pin-cols">
-            <thead>
-            <tr>
-            @foreach($campos as $campo)
-                <th>{{$campo}}</th>
-            @endforeach
-                <th></th>
-                <th></th>
-                <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            @foreach($filas as $fila)
-                <tr>
-                    @foreach($campos as $campo)
-                        <td>{{$fila->$campo}}</td>
+        <div class="overflow-x-auto">
+            <table class="table table-zebra w-full border border-gray-200 rounded-md">
+                <thead>
+                    <tr>
+                        @foreach($campos as $campo)
+                            <th>{{ ucfirst($campo) }}</th>
+                        @endforeach
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($alumnos as $alumno)
+                        <tr>
+                            @foreach($campos as $campo)
+                                <td>{{ $alumno->$campo }}</td>
+                            @endforeach
+                            <td>
+                                <a href="{{ route('alumnos.show', $alumno->id) }}" class="btn btn-info">👁️ Ver</a>
+                                <a href="{{ route('alumnos.edit', $alumno->id) }}" class="btn btn-warning">✏️ Editar</a>
+                                <form action="{{ route('alumnos.destroy', $alumno->id) }}" method="POST"
+                                    style="display:inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger"
+                                        onclick="return confirm('¿Seguro que deseas eliminar este alumno?')">
+                                        ❌ Eliminar
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
                     @endforeach
-                    <td>
-                        <!--edit-->
-                        <a href="{{route("alumnos.edit", $fila->id)}}">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="hover:bg-blue-500 size-6">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
-                        </svg>
-                        </a>
+                </tbody>
 
-                    </td>
-                        <!--delete-->
-                    <td>
-                        <form onsubmit=event.preventDefault() id="formulario{{$fila->id}}" action="{{route("alumnos.destroy",$fila->id)}}" method="POST">
-                            @method("DELETE")
-                            @csrf
-                            <button onclick="confirmDelete({{$fila->id}})">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 hover:bg-red-400 hover:text-white hover:rounded">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="m20.25 7.5-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5m6 4.125 2.25 2.25m0 0 2.25 2.25M12 13.875l2.25-2.25M12 13.875l-2.25 2.25M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z" />
-                        </svg>
-
-                            </button>
-                        </form>
-
-
-                    </td>
-                        <td><a href="{{route("alumnos.show", $fila->id)}}">Ver</a></td>
-
-                </tr>
-
-            @endforeach
-
-            </tbody>
-        </table>
+            </table>
+        </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        function confirmDelete(id){
-
-            swal({
-                title:"borrar ",
-                text:"Esta acción no se puede recuperar",
-                icon:"warning",
-                buttons:true
-            }).
-                then((ok)=>{
-                    if (ok){
-                        document.getElementById("formulario"+id).submit();
-
-                    }
-            }  )
+        function confirmDelete(alumnoId) {
+            Swal.fire({
+                title: "¿Estás seguro?",
+                text: "Esta acción no se puede deshacer.",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#3085d6",
+                confirmButtonText: "Sí, eliminar",
+                cancelButtonText: "Cancelar"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById("form-eliminar-" + alumnoId).submit();
+                }
+            });
         }
-        </script>
-
+    </script>
 </x-layouts.layout>

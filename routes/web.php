@@ -17,9 +17,12 @@ Route::resource("alumnos", AlumnoController::class)
 
 Route::view("/","welcome")->name("home");
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+use App\Http\Controllers\DashboardController;
+
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -29,4 +32,5 @@ Route::middleware('auth')->group(function () {
 Route::get("language/{locale}", LanguageController::class)->name('language');
 require __DIR__.'/auth.php';
 
-Route::resource('proyectos', ProyectoController::class);
+Route::resource('proyectos', ProyectoController::class)->middleware('auth');
+

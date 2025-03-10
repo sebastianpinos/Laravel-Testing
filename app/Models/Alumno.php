@@ -12,10 +12,13 @@ class Alumno extends Model
 
     protected $table = 'alumnos';
     protected $primaryKey = 'id';
-    protected $timestamp = true;
+    public $timestamps = true;
 
-    protected $fillable = ["nombre","email","edad"];
-    public function idiomas(){
+    // Agregamos el campo 'cancion_favorita' para que pueda ser llenado
+    protected $fillable = ["nombre", "email", "edad", "cancion_favorita"];
+
+    public function idiomas()
+    {
         return $this->hasMany(Idioma::class);
     }
 }

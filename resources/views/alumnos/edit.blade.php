@@ -1,91 +1,53 @@
-
 <x-layouts.layout>
-    <div class="flex flex-row justify-center items-center min-h-full bg-gray-300">
-        <div class="bg-white p-3 rounded-2xl">
+    <div class="container mx-auto py-6">
+        <h1 class="text-3xl font-bold text-center mb-6">Editar Alumno</h1>
 
-            <form action="{{route("alumnos.update", $alumno->id)}}" method="post">
-                @method('PUT')
+        @if ($errors->any())
+            <div class="alert alert-error bg-red-500 text-white p-3 rounded-md shadow-md mb-4">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <form action="{{ route('alumnos.update', $alumno->id) }}" method="POST">
                 @csrf
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                    <div>
-                        <x-input-label for="nombre" value="Nombre" />
-                        <x-text-input id="nombre" class="block mt-1 w-full" type="text" name="nombre" value="{{$alumno->nombre}}"   />
-                    </div>
-                      <div>
-                        <x-input-label for="email" value="Email" />
-                        <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" value="{{$alumno->email}}"   />
-                    </div>
-                      <div>
-                        <x-input-label for="edad" value="Edad" />
-                        <x-text-input id="edad" class="block mt-1 w-full" type="number" name="edad" value="{{$alumno->edad}}"  />
-                    </div>
-                    <div class="flex flex-row justify-between p-3">
-                        <button class="btn btn-warning" type="submit">Guardar</button>
-                        <button class="btn btn-warning" type="submit">Cancelar</button>
+                @method('PUT')
 
-                    </div>
-                    </div>
-
-                    <div>
-                        <div class="overflow-x-auto h-60">
-                            <table class="table table-xs table-pin-rows table-pin-cols">
-                                <thead>
-                                <tr>
-                                    <th>Idioma</th>
-                                    <th>Nivel</th>
-                                    <th>Título</th>
-                                </tr>
-                                </thead>
-
-                                <tbody>
-
-                                @php
-                                    $idiomas = collect(config("idiomas"))->sortByDesc(
-                                        fn($idioma)=>
-                                    $alumno->idiomas->contains("idioma", $idioma)
-                                 )
-
-                                @endphp
-                                @foreach($idiomas as $idioma)
-                                    <tr>
-                                        <td>
-                                            <input type="checkbox" value="{{$idioma}}" name="idiomas[]" id=""
-                                                {{$alumno->idiomas->contains("idioma",$idioma)? "checked":""}}
-                                            >
-                                                {{$idioma}}
-                                        </td>
-                                        <td>
-                                            <select class="text-sm h-8 rounded-sm" name="niveles[{{$idioma}}]" id="">
-                                                <option value="Básico">Básico</option>
-                                                <option value="Medio">Medio</option>
-                                                <option value="Alto">Alto</option>
-
-                                            </select>
-
-                                        </td>
-                                        <td>
-                                            <select class="text-sm h-8 rounded-sm" name="titulos[{{$idioma}}]" id="">
-                                                <option value="A1">A1</option>
-                                                <option value="A2">A2</option>
-                                                <option value="C1">C1</option>
-                                                <option value="C2">C2</option>
-                                                <option value="B1">B1</option>
-                                                <option value="B2">B2</option>
-                                            </select>
-
-                                        </td>
-                                    </tr>
-
-                                @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                <div class="form-control mb-4">
+                    <label for="nombre" class="label">Nombre del Alumno</label>
+                    <input id="nombre" name="nombre" type="text" value="{{ $alumno->nombre }}"
+                        class="input input-bordered w-full" required>
                 </div>
+
+                <div class="form-control mb-4">
+                    <label for="email" class="label">Correo Electrónico</label>
+                    <input id="email" name="email" type="email" value="{{ $alumno->email }}"
+                        class="input input-bordered w-full" required>
+                </div>
+
+                <div class="form-control mb-4">
+                    <label for="edad" class="label">Edad</label>
+                    <input id="edad" name="edad" type="number" value="{{ $alumno->edad }}"
+                        class="input input-bordered w-full" required>
+                </div>
+
+                <div class="flex justify-between mt-6">
+                    <a href="{{ route('alumnos.index') }}" class="btn btn-outline btn-error">Cancelar</a>
+                    <button type="submit" class="btn btn-primary">Actualizar Alumno</button>
+                </div>
+
+                <div class="form-control mb-4">
+                    <label for="cancion_favorita" class="label">Canción Favorita</label>
+                    <input id="cancion_favorita" name="cancion_favorita" type="text"
+                        placeholder="Ingrese el nombre de una canción" class="input input-bordered w-full">
+                </div>
+
+
             </form>
-
-
         </div>
     </div>
 </x-layouts.layout>
